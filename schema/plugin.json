@@ -1,8 +1,15 @@
 {
   "jupyter.lab.shortcuts": [],
-  "title": "jupyterspot",
-  "description": "jupyterspot settings.",
+  "title": "JupyterSpot",
+  "description": "JupyterSpot settings.",
   "type": "object",
-  "properties": {},
+  "properties": {
+    "API_KEY": {
+      "type": "string",
+      "title": "JupyterSpot API key",
+      "description": "This can be found at: https://jupyterspot.com/account",
+      "default": ""
+    }
+  },
   "additionalProperties": false
 }
