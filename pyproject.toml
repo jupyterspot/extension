@@ -35,7 +35,8 @@ test = [
 ]
 
 [tool.hatch.version]
-source = "nodejs"
+# source = "nodejs"
+path = "jupyterspot/_version.py"
 
 [tool.hatch.metadata.hooks.nodejs]
 fields = ["description", "authors", "urls"]
