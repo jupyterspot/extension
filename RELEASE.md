@@ -19,6 +19,7 @@ Bump the version using `hatch`. By default this will create a tag.
 See the docs on [hatch-nodejs-version](https://github.com/agoose77/hatch-nodejs-version#semver) for details.
 
 ```bash
+# also need to manually bump the JS version in `package.json`
 hatch version <new-version>
 ```
 
