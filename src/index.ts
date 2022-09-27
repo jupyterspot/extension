@@ -14,28 +14,20 @@ import {
 } from '@jupyterlab/notebook';
 import { IDisposable, DisposableDelegate } from '@lumino/disposable';
 
+// local
 // const backendURL = 'http://192.168.1.100:5000';
 // const frontendURL = 'http://192.168.1.100:5420';
+
+// prod
 const backendURL = 'https://api.jupyterspot.com';
 const frontendURL = 'https://jupyterspot.com';
+
 let apiKey = "";
 
 /**
  * Adds a notebook to JupyterSpot.
  */
  async function addNotebook(panel: NotebookPanel, apiKey: string) {
-  
-  // get the open dialog and set it's content to `msg`
-  function setMsg(msg: string) {
-    const dialogs = document.getElementsByClassName("jp-Dialog");
-    if (dialogs.length > 0) {
-      const dialog = dialogs[0];
-      const msgDiv = dialog.getElementsByClassName("jp-Dialog-body")[0];
-      msgDiv.innerHTML = msg;
-    } else {
-      console.log("JupyterSpot: no open dialog found");
-    }
-  }
 
   if (!apiKey) {
     showErrorMessage("Your JupyterSpot API key has not been set.", 
@@ -66,7 +58,21 @@ let apiKey = "";
   fd.append('api_key', apiKey);
   fd.append('path', nb_path);
 
-  showErrorMessage("Adding notebook to JupyterSpot...", "");
+  const dialogTitle = "Adding notebook to JupyterSpot..."
+  showErrorMessage(dialogTitle, "You can dismiss this and continue working. Another dialog will show when it's done.");
+
+  // get the open dialog and set it's content to `msg`
+  function setMsg(msgHTML: string, msgPlain: string) {
+    const dialogs = document.getElementsByClassName("jp-Dialog");
+    if (dialogs.length > 0) {
+      const dialog = dialogs[0];
+      const msgDiv = dialog.getElementsByClassName("jp-Dialog-body")[0];
+      msgDiv.innerHTML = msgHTML;
+    } else {
+      console.log("JupyterSpot: no open dialog found");
+      showErrorMessage(dialogTitle, msgPlain)
+    }
+  }
 
   await fetch(requestUrl, {
     method: 'post',
@@ -78,20 +84,29 @@ let apiKey = "";
     if (res.success) {
       const url = frontendURL + '/notebook?id=' + res.id;
       window.open(url);
-      setMsg(
-        "Added notebook to JupyterSpot successfully.  " +
-        "If a new tab didn't open, give your browser permission to open popups from JupyterLab. " +
-        "The URL for your notebook whiteboard is: <a href='" + url + "' target='_blank'>" + url + "</a>"
-      );
+
+      const msgHTML = "Added notebook to JupyterSpot successfully.  " +
+      "If a new tab didn't open, you may want to give your browser permission to open popups from JupyterLab. " +
+      "The link to your notebook's whiteboard is: <a href='" + url + "' target='_blank'>" + url + "</a>"
+
+      // no way to set HTML if dialog was closed
+      const msgPlain = "Added notebook to JupyterSpot successfully.  " +
+      "If a new tab didn't open, you may want to give your browser permission to open popups from JupyterLab. " +
+      "The link to your notebook's whiteboard is: " + url
+
+      setMsg(msgHTML, msgPlain);
+
       console.info('JupyterSpot notebook url: ', url);
     } else {
-      setMsg('Error adding notebook to JupyterSpot: ' + res.msg);
+      const msg = 'Error adding notebook to JupyterSpot: ' + res.msg;
+      setMsg(msg, msg);
     }
     return res;
   })
   .catch((error) => {
     console.log('JupyterSpot error:', error);
-    setMsg('Error adding the notebook to JupyterSpot: ' + error.toString());
+    const msg = 'Error adding the notebook to JupyterSpot: ' + error.toString();
+    setMsg(msg, msg);
     return error;
   });
 }
