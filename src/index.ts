@@ -1,6 +1,6 @@
 import {
   JupyterFrontEnd,
-  JupyterFrontEndPlugin,
+  JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
@@ -8,10 +8,7 @@ import { showErrorMessage } from '@jupyterlab/apputils';
 import { PageConfig } from '@jupyterlab/coreutils';
 import { ToolbarButton } from '@jupyterlab/apputils';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
-import {
-  NotebookPanel,
-  INotebookModel,
-} from '@jupyterlab/notebook';
+import { NotebookPanel, INotebookModel } from '@jupyterlab/notebook';
 import { IDisposable, DisposableDelegate } from '@lumino/disposable';
 
 // local
@@ -22,28 +19,31 @@ import { IDisposable, DisposableDelegate } from '@lumino/disposable';
 const backendURL = 'https://api.jupyterspot.com';
 const frontendURL = 'https://jupyterspot.com';
 
-let apiKey = "";
+let apiKey = '';
 
 /**
  * Adds a notebook to JupyterSpot.
  */
- async function addNotebook(panel: NotebookPanel, apiKey: string) {
-
+async function addNotebook(panel: NotebookPanel, apiKey: string) {
   if (!apiKey) {
-    showErrorMessage("Your JupyterSpot API key has not been set.", 
-      "Get your API key by going to https://jupyterspot.com/account, then add it to " + 
-      "JupyterLab by going to Settings -> Advanced Settings Editor -> JupyterSpot " + 
-      "and updating the API_KEY setting."
+    showErrorMessage(
+      'Your JupyterSpot API key has not been set.',
+      'Get your API key by going to https://jupyterspot.com/account, then add it to ' +
+        'JupyterLab by going to Settings -> Advanced Settings Editor -> JupyterSpot ' +
+        'and updating the API_KEY setting.'
     );
     return;
   }
 
   // get JSON notebook representation from the panel
   if (!panel.content.model) {
-    showErrorMessage("Notebook has no content, can't add it to JupyterSpot.", "");
+    showErrorMessage(
+      "Notebook has no content, can't add it to JupyterSpot.",
+      ''
+    );
     return;
   }
-  
+
   const nb_json = JSON.stringify(panel.content.model.toJSON(), null);
 
   // TODO: handle Windows paths
@@ -58,92 +58,103 @@ let apiKey = "";
   fd.append('api_key', apiKey);
   fd.append('path', nb_path);
 
-  const dialogTitle = "Adding notebook to JupyterSpot..."
-  showErrorMessage(dialogTitle, "You can dismiss this and continue working. Another dialog will show when it's done.");
+  const dialogTitle = 'Adding notebook to JupyterSpot...';
+  showErrorMessage(
+    dialogTitle,
+    "You can dismiss this and continue working. Another dialog will show when it's done."
+  );
 
   // get the open dialog and set it's content to `msg`
   function setMsg(msgHTML: string, msgPlain: string) {
-    const dialogs = document.getElementsByClassName("jp-Dialog");
+    const dialogs = document.getElementsByClassName('jp-Dialog');
     if (dialogs.length > 0) {
       const dialog = dialogs[0];
-      const msgDiv = dialog.getElementsByClassName("jp-Dialog-body")[0];
+      const msgDiv = dialog.getElementsByClassName('jp-Dialog-body')[0];
       msgDiv.innerHTML = msgHTML;
     } else {
-      console.log("JupyterSpot: no open dialog found");
-      showErrorMessage(dialogTitle, msgPlain)
+      console.log('JupyterSpot: no open dialog found');
+      showErrorMessage(dialogTitle, msgPlain);
     }
   }
 
   await fetch(requestUrl, {
     method: 'post',
-    body: fd,
+    body: fd
   })
-  .then((res) => res.json())
-  .then((res) => {
-    console.log('JupyterSpot result:', res);
-    if (res.success) {
-      const url = frontendURL + '/notebook?id=' + res.id;
-      window.open(url);
+    .then(res => res.json())
+    .then(res => {
+      console.log('JupyterSpot result:', res);
+      if (res.success) {
+        const url = frontendURL + '/notebook?id=' + res.id;
+        window.open(url);
 
-      const msgHTML = "Added notebook to JupyterSpot successfully.  " +
-      "If a new tab didn't open, you may want to give your browser permission to open popups from JupyterLab. " +
-      "The link to your notebook's whiteboard is: <a href='" + url + "' target='_blank'>" + url + "</a>"
+        const msgHTML =
+          'Added notebook to JupyterSpot successfully.  ' +
+          "If a new tab didn't open, you may want to give your browser permission to open popups from JupyterLab. " +
+          "The link to your notebook's whiteboard is: <a href='" +
+          url +
+          "' target='_blank'>" +
+          url +
+          '</a>';
 
-      // no way to set HTML if dialog was closed
-      const msgPlain = "Added notebook to JupyterSpot successfully.  " +
-      "If a new tab didn't open, you may want to give your browser permission to open popups from JupyterLab. " +
-      "The link to your notebook's whiteboard is: " + url
+        // no way to set HTML if dialog was closed
+        const msgPlain =
+          'Added notebook to JupyterSpot successfully.  ' +
+          "If a new tab didn't open, you may want to give your browser permission to open popups from JupyterLab. " +
+          "The link to your notebook's whiteboard is: " +
+          url;
 
-      setMsg(msgHTML, msgPlain);
+        setMsg(msgHTML, msgPlain);
 
-      console.info('JupyterSpot notebook url: ', url);
-    } else {
-      const msg = 'Error adding notebook to JupyterSpot: ' + res.msg;
+        console.info('JupyterSpot notebook url: ', url);
+      } else {
+        const msg = 'Error adding notebook to JupyterSpot: ' + res.msg;
+        setMsg(msg, msg);
+      }
+      return res;
+    })
+    .catch(error => {
+      console.log('JupyterSpot error:', error);
+      const msg =
+        'Error adding the notebook to JupyterSpot: ' + error.toString();
       setMsg(msg, msg);
-    }
-    return res;
-  })
-  .catch((error) => {
-    console.log('JupyterSpot error:', error);
-    const msg = 'Error adding the notebook to JupyterSpot: ' + error.toString();
-    setMsg(msg, msg);
-    return error;
-  });
+      return error;
+    });
 }
-
 
 /**
  * A notebook widget extension that adds the open notebook to JupyterSpot.
  */
- export class ButtonExtension
- implements DocumentRegistry.IWidgetExtension<NotebookPanel, INotebookModel> {
- /**
-  * Create a new extension for the notebook panel widget.
-  *
-  * @param panel Notebook panel
-  * @param context Notebook context
-  * @returns Disposable on the added button
-  */
- createNew(
-   panel: NotebookPanel,
-   context: DocumentRegistry.IContext<INotebookModel>
- ): IDisposable {
-   const button = new ToolbarButton({
-     className: 'upload-button',
-     label: 'Open in JupyterSpot',
-     tooltip: 'Open in JupyterSpot',
-     pressedTooltip: 'Adding notebook to JupyterSpot',
-     disabledTooltip: 'Adding notebook to JupyterSpot...',
-     enabled: true,
-     pressed: false,
-     onClick: () => addNotebook(panel, apiKey),
-   });
+export class ButtonExtension
+  implements DocumentRegistry.IWidgetExtension<NotebookPanel, INotebookModel>
+{
+  /**
+   * Create a new extension for the notebook panel widget.
+   *
+   * @param panel Notebook panel
+   * @param context Notebook context
+   * @returns Disposable on the added button
+   */
+  createNew(
+    panel: NotebookPanel,
+    context: DocumentRegistry.IContext<INotebookModel>
+  ): IDisposable {
+    const button = new ToolbarButton({
+      className: 'upload-button',
+      label: 'Open in JupyterSpot',
+      tooltip: 'Open in JupyterSpot',
+      pressedTooltip: 'Adding notebook to JupyterSpot',
+      disabledTooltip: 'Adding notebook to JupyterSpot...',
+      enabled: true,
+      pressed: false,
+      onClick: () => addNotebook(panel, apiKey)
+    });
 
-   panel.toolbar.insertItem(10, 'openInJupyterSpot', button);
-   return new DisposableDelegate(() => {
-     button.dispose();
-   });
- }
+    panel.toolbar.insertItem(10, 'openInJupyterSpot', button);
+    return new DisposableDelegate(() => {
+      button.dispose();
+    });
+  }
 }
 
 /**
@@ -153,15 +164,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jupyterspot:plugin',
   autoStart: true,
   requires: [ISettingRegistry],
-  activate: (
-    app: JupyterFrontEnd,
-    settings: ISettingRegistry,
-    ) => {
+  activate: (app: JupyterFrontEnd, settings: ISettingRegistry) => {
     console.log('JupyterSpot extension activated');
 
     // add the button
     app.docRegistry.addWidgetExtension('Notebook', new ButtonExtension());
-    
+
     /**
      * Load the settings for this extension
      *
@@ -171,27 +179,27 @@ const plugin: JupyterFrontEndPlugin<void> = {
       // Read the settings and convert to the correct type
       apiKey = setting.get('API_KEY').composite as string;
       if (apiKey) {
-        console.log("JupyterSpot apiKey is set");
+        console.log('JupyterSpot apiKey is set');
       } else {
-        console.log("JupyterSpot apiKey is NOT set");
+        console.log('JupyterSpot apiKey is NOT set');
       }
     }
-    
+
     // Wait for the application to be restored and
     // for the settings for this plugin to be loaded
     Promise.all([app.restored, settings.load(plugin.id)])
-    .then(([, setting]) => {
-      // Read the settings
-      loadSetting(setting);
+      .then(([, setting]) => {
+        // Read the settings
+        loadSetting(setting);
 
-      // Listen for your plugin setting changes using Signal
-      setting.changed.connect(loadSetting);
-    })
-    .catch((reason) => {
-      console.error(
-        `Something went wrong when reading the settings.\n${reason}`
-      );
-    });
+        // Listen for your plugin setting changes using Signal
+        setting.changed.connect(loadSetting);
+      })
+      .catch(reason => {
+        console.error(
+          `Something went wrong when reading the settings.\n${reason}`
+        );
+      });
   }
 };
 

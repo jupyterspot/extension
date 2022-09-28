@@ -2,15 +2,15 @@
 
 [![Github Actions Status](https://github.com/jupyterspot/extension/workflows/Build/badge.svg)](https://github.com/jupyterspot/extension/actions/workflows/build.yml)
 
-![](https://jupyterspot.com/static/img/jspot/logo-w350.png)
+![logo](https://jupyterspot.com/static/img/jspot/logo-w350.png)
 
 Instead of screen-sharing a Jupyter notebook, share a link to a real-time collaborative whiteboard with live cursors, scroll syncing, freehand drawings, text, and sticky notes.
 
-Create a [free account](https://jupyterspot.com/signup) to get an API key, then click the "Open In [JupyterSpot](https://jupyterspot.com)" button to see your notebook's whiteboard. 
+Create a [free account](https://jupyterspot.com/signup) to get an API key, then click the "Open In [JupyterSpot](https://jupyterspot.com)" button to see your notebook's whiteboard.
 
 Check out the [full documentation](https://docs.jupyterspot.com) for more info.
 
-![](https://jupyterspot.com/static/img/jspot/jspot-demo-003.gif)
+![demo](https://jupyterspot.com/static/img/jspot/jspot-demo-003.gif)
 
 ## Requirements
 
