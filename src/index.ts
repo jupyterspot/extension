@@ -165,7 +165,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
   autoStart: true,
   requires: [ISettingRegistry],
   activate: (app: JupyterFrontEnd, settings: ISettingRegistry) => {
-    console.log('JupyterSpot extension activated');
+    console.log('JupyterLab extension jupyterspot is activated!');
 
     // add the button
     app.docRegistry.addWidgetExtension('Notebook', new ButtonExtension());
