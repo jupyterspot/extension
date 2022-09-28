@@ -123,3 +123,4 @@ dmypy.json
 # notebooks
 *.ipynb
 
+coverage/
