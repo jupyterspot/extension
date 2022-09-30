@@ -6,9 +6,7 @@
 
 Instead of screen-sharing a Jupyter notebook, share a link to a real-time collaborative whiteboard with live cursors, scroll syncing, freehand drawings, text, and sticky notes.
 
-Create a [free account](https://jupyterspot.com/signup) to get an API key, then click the "Open In [JupyterSpot](https://jupyterspot.com)" button to see your notebook's whiteboard.
-
-Check out the [full documentation](https://docs.jupyterspot.com) for more info.
+Create a [free account](https://jupyterspot.com/signup) to get an API key, then click the "Open in JupyterSpot" button to see your notebook's whiteboard. Check out the [documentation](https://jupyterspot.github.io/docs/adding-notebooks.html#adding-a-notebook-via-jupyterlab-extension) for more detailed instructions.
 
 ![demo](https://jupyterspot.com/static/img/jspot/jspot-demo-003.gif)
 
