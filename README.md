@@ -3,7 +3,9 @@
 [![Github Actions Status](https://github.com/jupyterspot/extension/workflows/Build/badge.svg)](https://github.com/jupyterspot/extension/actions/workflows/build.yml)
 [![Latest Version](https://img.shields.io/pypi/v/jupyterspot.svg)](https://pypi.python.org/pypi/jupyterspot)
 
-![logo](https://jupyterspot.com/static/img/jspot/logo-w350.png)
+<p align="center">
+<img src="https://jupyterspot.com/static/img/jspot/logo-w350.png", alt="logo">
+</p>
 
 Instead of screen-sharing a Jupyter notebook, share a link to a real-time collaborative whiteboard with live cursors, scroll syncing, freehand drawings, text, and sticky notes. The notebook is converted to HTML with nbconvert, then a [tldraw](https://github.com/tldraw/tldraw) whiteboard is overlaid on top.
 
