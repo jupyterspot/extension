@@ -7,13 +7,15 @@
 
 Instead of screen-sharing a Jupyter notebook, share a link to a real-time collaborative whiteboard with live cursors, scroll syncing, freehand drawings, text, and sticky notes. The notebook is converted to HTML with nbconvert, then a [tldraw](https://github.com/tldraw/tldraw) whiteboard is overlaid on top.
 
+![sd-demo](https://jupyterspot.com/static/img/jspot/sd-demo.gif)
+
 - Initially, everyone's scroll position in the notebook syncs with the presenter.
 - Become the scroll leader to ask a question about something the presenter scrolled past and have all participants follow you.
 - Break away and scroll on your own to review that figure you didn't have enough time to parse.
 
-Create a [free account](https://jupyterspot.com/signup) to get an API key, then click the "Open in JupyterSpot" button to see your notebook's whiteboard. Check out the [documentation](https://jupyterspot.github.io/docs/adding-notebooks.html#adding-a-notebook-via-jupyterlab-extension) for more detailed instructions.
+![scroll-demo](https://jupyterspot.com/static/img/jspot/jspot-demo-003.gif)
 
-![demo](https://jupyterspot.com/static/img/jspot/jspot-demo-003.gif)
+Create a [free account](https://jupyterspot.com/signup) to get an API key, then click the "Open in JupyterSpot" button to see your notebook's whiteboard. Check out the [documentation](https://jupyterspot.github.io/docs/adding-notebooks.html#adding-a-notebook-via-jupyterlab-extension) for more detailed instructions.
 
 ## Requirements
 
